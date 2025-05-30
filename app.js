@@ -1,3 +1,4 @@
+Uppdatera din app.js fil i din github-editor till en cpu-intensiv app genom att editera den i github och ersätt all befintlig kod med nedan. Vänta därefter till den är publicerad.
 const http = require('http');
 
 const hostname = '0.0.0.0';
