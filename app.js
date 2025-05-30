@@ -1,26 +1,25 @@
-Uppdatera din app.js fil i din github-editor till en cpu-intensiv app genom att editera den i github och ersätt all befintlig kod med nedan. Vänta därefter till den är publicerad.
 const http = require('http');
+const axios = require('axios');
 
 const hostname = '0.0.0.0';
 const port = process.env.PORT || 3000;
 
-function cpuWork() {
-  let sum = 0;
-  for (let i = 0; i < 1e9; i++) {
-    sum += Math.sqrt(i);
+const server = http.createServer(async (req, res) => {
+  try {
+    const jokeResponse = await axios.get('https://official-joke-api.appspot.com/random_joke');
+    const joke = jokeResponse.data;
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'text/html');
+    res.end(`<h1>${joke.setup}</h1><p>${joke.punchline}</p>`);
+  } catch (error) {
+    res.statusCode = 500;
+    res.setHeader('Content-Type', 'text/plain');
+    res.end('Error fetching joke');
   }
-  return sum;
-}
+});
 
-const server = http.createServer((req, res) => {
-  const result = cpuWork();
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/html');
-  res.end(`
-    <h1>CPU-belastningstest</h1>
-    <p>Appen kördes korrekt och genererade CPU-arbete.</p>
-    <p>Resultat av beräkning: ${result}</p>
-  `);
+server.listen(port, hostname, () => {
+  console.log(`Server running at http://${hostname}:${port}/`);
 });
 
 server.listen(port, hostname, () => {
